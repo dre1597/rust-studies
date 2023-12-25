@@ -27,9 +27,63 @@ fn main() {
             let (days, hours, minutes, seconds) = convert_seconds(n);
             println!("{} seconds is equal to", n);
             println!("{}d, {}h, {}m, {}s", days, hours, minutes, seconds);
-        },
+        }
         Err(e) => {
             println!("Error: {}", e);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_seconds_partition_low_boundary() {
+        let expected = (0, 0, 0, 1);
+        let (days, hours, minutes, seconds) = convert_seconds(1);
+        assert_eq!((days, hours, minutes, seconds), expected);
+    }
+
+    #[test]
+    fn test_seconds_partition_high_boundary() {
+        let expected = (0, 0, 0, 59);
+        let (days, hours, minutes, seconds) = convert_seconds(59);
+        assert_eq!((days, hours, minutes, seconds), expected);
+    }
+
+    #[test]
+    fn test_minutes_partition_low_boundary() {
+        let expected = (0, 0, 1, 0);
+        let (days, hours, minutes, seconds) = convert_seconds(1 * 60);
+        assert_eq!((days, hours, minutes, seconds), expected);
+    }
+
+    #[test]
+    fn test_minutes_partition_high_boundary() {
+        let expected = (0, 0, 59, 59);
+        let (days, hours, minutes, seconds) = convert_seconds(59 * 60 + 59);
+        assert_eq!((days, hours, minutes, seconds), expected);
+    }
+
+    #[test]
+    fn test_hours_partition_low_boundary() {
+        let expected = (0, 1, 0, 0);
+        let (days, hours, minutes, seconds) = convert_seconds(1 * 60 * 60);
+        assert_eq!((days, hours, minutes, seconds), expected);
+    }
+
+    #[test]
+    fn test_hours_partition_high_boundary() {
+        let expected = (0, 23, 59, 59);
+        let (days, hours, minutes, seconds) = convert_seconds(23 * 60 * 60 + 59 * 60 + 59);
+        assert_eq!((days, hours, minutes, seconds), expected);
+    }
+
+    #[test]
+    fn test_days_partition_low_boundary() {
+        let expected = (1, 0, 0, 0);
+        let (days, hours, minutes, seconds) = convert_seconds(24 * 60 * 60);
+        assert_eq!((days, hours, minutes, seconds), expected);
     }
 }
